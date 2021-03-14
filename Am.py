@@ -18,15 +18,16 @@ def app_upload():
     if request.method=="POST":
         #print(request)
         file_received=request.files['app_file']
-        print(file_received.filename)
         if not os.path.exists('temp'):
             os.mkdir('temp')
         save_path=os.path.join(app.config['upload_path'],file_received.filename)
         file_received.save(save_path)
         try:
-            validate_app(save_path)
+            is_valid=validate_app(save_path)
         except:
-            return "Wrong Format"
+            return "Unable to process file"
+        if not is_valid:
+            return "Wrong Config File Format"
         return "File successfully uploaded"
 
 @app.route("/",methods=["GET","POST"])
