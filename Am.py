@@ -11,14 +11,19 @@ def index():
     if request.method=="POST":
         user = request.form['user']
         passwd = request.form['pass']
-        UserList[user] = passwd
+        if UserList[user] == passwd:
+            return "Success"
+        else:
+            return "failed"
     return render_template("index.html")
 
 
 @app.route("/signup",methods=["GET","POST"])
 def signup():
     if request.method=="POST":
-        print(request)
+        user = request.form['user']
+        passwd = request.form['pass']
+        UserList[user] = passwd
     
     return render_template("signup.html")
 
