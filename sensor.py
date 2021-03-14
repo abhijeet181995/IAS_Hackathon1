@@ -18,15 +18,16 @@ class sensorClass:
             self.data.append(random.randint(1,10))
             time.sleep(self.output_rate)
 
+    
     def get(self):
-        return self.data
-        self.data = []
+        d = self.data
+        self.data =[]
+        return d
 
-with open("./app_repo/test/sensor_config.json","r") as fp:
+with open("sensor_config.json","r") as fp:
     config = json.loads(fp.read())
 
 sensor_object = {}
 
 for sensor in config['Sensor']:
     sensor_object[sensor["Sensor_id"]] =  sensorClass(sensor['Sensor_id'],sensor["Sensor_type"],sensor["Sensor_location"],sensor["Sensor_output_type"],sensor["Sensor_output_rate"])
-
