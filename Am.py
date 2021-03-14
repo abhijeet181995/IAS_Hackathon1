@@ -1,6 +1,7 @@
 from flask import Flask ,request , render_template ,redirect , url_for 
 import os
 from file_validator import validate_app
+from init import execute
 
 app = Flask(__name__)
 
@@ -23,11 +24,12 @@ def app_upload():
         save_path=os.path.join(app.config['upload_path'],file_received.filename)
         file_received.save(save_path)
         try:
-            is_valid=validate_app(save_path)
+            is_valid,path=validate_app(save_path)
         except:
             return "Unable to process file"
         if not is_valid:
             return "Wrong Config File Format"
+        execute(path)
         return "File successfully uploaded"
 
 @app.route("/",methods=["GET","POST"])

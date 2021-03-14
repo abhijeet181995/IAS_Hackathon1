@@ -99,7 +99,7 @@ def validate_app(zip_path):
             validate_sensor_config('./temp/'+file_name+'/sensor_config.json')
         except:
             shutil.rmtree('./temp/'+file_name)
-            return False
+            return False,None
         shutil.move('./temp/'+file_name,app_repo+file_name)
         os.remove(zip_path)
-    return True
+    return True,app_repo+file_name
