@@ -1,4 +1,4 @@
-from flask import Flask ,request , render_template
+from flask import Flask ,request , render_template ,redirect
 
 app = Flask(__name__)
 
@@ -12,9 +12,9 @@ def index():
         user = request.form['user']
         passwd = request.form['pass']
         if UserList[user] == passwd:
-            return "Success"
+            return "Success" #UPLOAD FORM
         else:
-            return "failed"
+            return redirect("/")
     return render_template("index.html")
 
 
@@ -24,6 +24,8 @@ def signup():
         user = request.form['user']
         passwd = request.form['pass']
         UserList[user] = passwd
+        return redirect("/")
+
     
     return render_template("signup.html")
 
