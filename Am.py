@@ -6,9 +6,7 @@ app=Flask(__name__)
 
 app.config['upload_extensions']=['zip','json']
 app.config['upload_path']='temp'
-UserList={
-
-}
+UserList=dict()
 
 @app.route("/app_upload",methods=["GET","POST"])
 def app_upload():
@@ -38,4 +36,5 @@ def index():
     return render_template("index.html")
 
 if __name__=="__main__":
+    print("check")
     app.run(debug=True,port=8080)
