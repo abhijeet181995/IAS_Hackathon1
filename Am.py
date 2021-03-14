@@ -1,12 +1,15 @@
-from flask import *
+from flask import Flask ,request , render_template ,redirect , url_for 
 import os
 from file_validator import validate_app
 
-app=Flask(__name__)
+app = Flask(__name__)
 
 app.config['upload_extensions']=['zip','json']
 app.config['upload_path']='temp'
-UserList=dict()
+UserList={
+
+}
+
 
 @app.route("/app_upload",methods=["GET","POST"])
 def app_upload():
@@ -20,11 +23,13 @@ def app_upload():
             os.mkdir('temp')
         save_path=os.path.join(app.config['upload_path'],file_received.filename)
         file_received.save(save_path)
-    validate_app(save_path)
-    return "File successfully uploaded"
+        try:
+            validate_app(save_path)
+        except:
+            return "Wrong Format"
+        return "File successfully uploaded"
 
-@app.route("/")
-@app.route("/index")
+@app.route("/",methods=["GET","POST"])
 def index():
     if request.method=="POST":
         user = request.form['user']
@@ -32,9 +37,18 @@ def index():
         if UserList[user] == passwd:
             return redirect(url_for('app_upload'))
         else:
-            return "failed"
+            return redirect("/")
     return render_template("index.html")
 
+
+@app.route("/signup",methods=["GET","POST"])
+def signup():
+    if request.method=="POST":
+        user = request.form['user']
+        passwd = request.form['pass']
+        UserList[user] = passwd
+        return redirect("/")
+    return render_template("signup.html")
+
 if __name__=="__main__":
-    print("check")
-    app.run(debug=True,port=8080)
+    app.run(debug=True)
