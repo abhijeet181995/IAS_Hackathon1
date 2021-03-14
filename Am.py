@@ -1,10 +1,32 @@
-from flask import Flask ,request , render_template ,redirect
+from flask import Flask ,request , render_template ,redirect , url_for 
 
 app = Flask(__name__)
 
+
+
+app.config['upload_extensions']=['zip','json']
+app.config['upload_path']='temp'
 UserList={
 
 }
+
+
+@app.route("/app_upload",methods=["GET","POST"])
+def app_upload():
+    if request.method=="GET":
+        return render_template('app_upload.html')
+    if request.method=="POST":
+        #print(request)
+        file_received=request.files['app_file']
+        print(file_received.filename)
+        if not os.path.exists('temp'):
+            os.mkdir('temp')
+        save_path=os.path.join(app.config['upload_path'],file_received.filename)
+        file_received.save(save_path)
+    validate_app(save_path)
+    return "File successfully uploaded"
+
+
 
 @app.route("/",methods=["GET","POST"])
 def index():
@@ -12,7 +34,7 @@ def index():
         user = request.form['user']
         passwd = request.form['pass']
         if UserList[user] == passwd:
-            return "Success" #UPLOAD FORM
+            return redirect(url_for('app_upload'))
         else:
             return redirect("/")
     return render_template("index.html")
@@ -25,8 +47,6 @@ def signup():
         passwd = request.form['pass']
         UserList[user] = passwd
         return redirect("/")
-
-    
     return render_template("signup.html")
 
 if __name__=="__main__":
